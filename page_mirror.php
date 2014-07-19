@@ -31,5 +31,7 @@ $recomandationDivPattern = "<div class=\"details-section recommendation";
 $pos = strpos($content, $recomandationDivPattern);
 $content = substr($content, 0, $pos);
 
+// Writes on screen
 echo $content;
+
 ?>
