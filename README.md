@@ -43,4 +43,5 @@ To reduce data overload the following method is used:
 
 1. Page_mirror.php script has the objective of retrieving a complete local replica of the url passed as parameter;
 2. Once downloaded the data content will be stripped off of <img> and <src> tags as much as possible, but this procedure, due to limitation of used host, is accomplished with regex, not the best (of course) way to do HTML parsing, but it's quietly acceptable for our purpose;
-3. Get_app_data.php will perform an ajax call to get the minimum possible portion from page_mirror.php selecting tags with JQuery and will build a JSON object string to send back to client.
+3. A time based check is made to avoid to many useless calls from host to Play Store site and results are stored in a cache file. 
+4. Get_app_data.php, the script that receives the calls from client, will perform an inter-script data transfert to get the minimum possible portion from page_mirror.php selecting tags with JQuery and will build a JSON object string to send back to client. If possible this step is made by retrieving data from the cache file.
