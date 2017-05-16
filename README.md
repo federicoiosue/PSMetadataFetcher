@@ -31,7 +31,7 @@ But given that Google already provides a portal, as I am lazy, I'd like to try t
    }
    ```
 
-### Notes
+### Caching
 
 To reduce data overload the following method is used:
 
@@ -39,3 +39,12 @@ To reduce data overload the following method is used:
 2. Once downloaded the data content will be stripped off of <img> and <src> tags as much as possible, but this procedure, due to limitation of used host, is accomplished with regex, not the best (of course) way to do HTML parsing, but it's quietly acceptable for our purpose;
 3. A time based check is made to avoid to many useless calls from host to Play Store site and results are stored in a cache file. 
 4. Get_app_data.php, the script that receives the calls from client, will perform an inter-script data transfert to get the minimum possible portion from page_mirror.php selecting tags with JQuery and will build a JSON object string to send back to client. If possible this step is made by retrieving data from the cache file.
+
+### Multiple versions on Play Store
+
+If multiple versions of the app have been released on the Play Store the ``` softwareVersion ``` field could contain just something like "Varies with device".
+A workaround I use in this case is to create the changelog like it follows, by putting the latest released version on top.
+
+ ![whats-new-parsing](whats-new-parsing.png)
+
+By doing like this the script will automatically parse that version.
