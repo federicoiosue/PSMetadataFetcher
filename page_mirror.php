@@ -18,6 +18,7 @@ limitations under the License.
 
 // Queried url will be retrieved
 $mURL = $_GET['url'];
+
 $content = file_get_contents($mURL);
 
 // Removing image tags
@@ -27,7 +28,7 @@ $content = preg_replace("/<img[^>]+\>/i", "", $content);
 $content = preg_replace("/<script[^>]+\>/i", "", $content);
 
 // UNSAFE: Removing portion of content from "recomandation" to the end of file
-$recomandationDivPattern = "<div class=\"details-section recommendation";
+$recomandationDivPattern = "<div class=\"id-cluster-container details-section recommendation";
 $pos = strpos($content, $recomandationDivPattern);
 $content = substr($content, 0, $pos);
 

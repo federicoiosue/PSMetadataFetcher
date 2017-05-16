@@ -8,36 +8,30 @@ Google doesn't provide an API access to retrieve easilly Android application's u
 A common method to accomplish this task is by providing a service or a web page where to store the app necessary  data and then retrieve them directly from the device when needed.
 But given that Google already provides a portal, as I am lazy, I'd like to try to take advantage of their web infrastructure.
 
+## Usage
 
+1. Upload the project on a hosting managed by Apache
 
-##Usage
+2. Perform a HTTP GET request to ``` get_app_data.php?url= ``` using as url query parameter the url of app into Google Play Store, like:
 
-Simply call this page:
-<pre>
-http://www.iosue.it/federico/apps/PSMetadataFetcher/get_app_data.php?url=
-</pre>
+   ```http
+   [YOUR_HOST]/get_app_data.php?url=https://play.google.com/store/apps/details?id=it.feio.android.omninotes
+   ```
 
+3. A json will be returned in this form, the localization will depend on your locale:
 
-Using as url query parameter the url of app into Google Play Store, like:
-<pre>
-https://play.google.com/store/apps/details?id=it.feio.android.omninotes
-</pre>
+   ```json
+   {
+     "datePublished": "18 gennaio 2014", 
+     "fileSize": "1,8M", 
+     "numDownloads": "500-1.000", 
+     "softwareVersion": "4.1.2", 
+     "operatingSystems": "2.3 e superiori", 
+     "contentRating": "Maturità bassa"
+   }
+   ```
 
-
-A json will be returned in this form, the localization will depend on your locale:
-<pre>
-{
-    "datePublished": "18 gennaio 2014", 
-    "fileSize": "1,8M", 
-    "numDownloads": "500-1.000", 
-    "softwareVersion": "4.1.2", 
-    "operatingSystems": "2.3 e superiori", 
-    "contentRating": "Maturità bassa"
-}
-</pre>
-
-
-###Notes
+### Notes
 
 To reduce data overload the following method is used:
 

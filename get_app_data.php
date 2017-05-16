@@ -2,38 +2,39 @@
 
 include "./constants.php";
 include "./simple_html_dom.php";
-
-
-function getDataWithCacheProxy($CACHE_FILE, $DELAY) {
-	if (time() > filemtime($CACHE_FILE) + $DELAY) {
-		$url = "http://www.iosue.it/federico/apps/PSMetadataFetcher/page_mirror.php?url=".$_GET['url'];
-		$html = file_get_html("$url");
-		file_put_contents($CACHE_FILE, $html);
+		
+function getDataWithCacheProxy($cacheFile, $delay, $url) {
+	$refreshCacheFile = !is_file($cacheFile) || !filesize($cacheFile) || time() > filemtime($cacheFile) + $delay;
+	if ($refreshCacheFile) {
+		$html = file_get_html(getCurrentBaseUrl($url));
+		file_put_contents($cacheFile, $html);
 		return $html;
 	} else { 
-		return file_get_html($CACHE_FILE);
+		return file_get_html($cacheFile);
 	}
 }
 
+function getCurrentBaseUrl($url) {
+	$currentUrl = (isset($_SERVER['HTTPS']) ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+	$currentBaseUrl = strtok($currentUrl,'?');
+	$pageMirrorScript = dirname($currentBaseUrl) . "/page_mirror.php?url=" . $url;
+	return $pageMirrorScript;
+}
+
 // Create DOM from URL or file
-$html = getDataWithCacheProxy($CACHE_FILE, $DELAY);
+$html = getDataWithCacheProxy($CACHE_FILE, $DELAY, $_GET['url']);
 
 // These are the necessary "itemprop" values extracted from the Play Store page
 $itemsProps = array("datePublished", "fileSize", "numDownloads", "softwareVersion", "operatingSystems", "contentRating");
 
-$json = '{';
-
 // A JSON object string is now created cyling on "itemprop" values above
+$json = '{';
 for ($i=0; $i < count($itemsProps); $i++) {
-
     foreach($html->find('div[itemprop='.$itemsProps[$i].']') as $element)
         $info = trim($element->plaintext);
-	
 	$json .= $i != 0 ? ", " : "";
 	$json .= '"' . $itemsProps[$i] . '": "' . $info . '"';
-
 }
-
 $json .= '}';
 
 echo $json;
